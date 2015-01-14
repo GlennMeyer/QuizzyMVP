@@ -13,10 +13,20 @@
 	function renderQuestions () {
 		$('.quizzy-quiz').empty()
 
+		// if (sessionStorage.getItem('topScores')) var data = sessionStorage.getItem('topScores').split('|')
 
 		Quizzy.forEach(function (question){
+			// var answersToQuestion = 0
+			// var correctAnswersToQuestion = 0
+
+			// if (sessionStorage.getItem('topScores')) {
+			// 	data.forEach(function(entry){
+			// 		console.log(entry.split(',')[question.id + 2]) === question.correctAnswer
+			// 	})
+			// }
+
 			var questionDiv = $('<div>')
-			.addClass('question ' + question.id)
+			.addClass('question-' + question.id)
 			.append(
 				$('<h3>').html(question.id + '.)  ' + question.text)
 			)
@@ -29,6 +39,7 @@
 				.attr('name', 'question-' + question.id)
 				.attr('value', question.answer2)
 
+			var percentageCorrectSpan = $('<span>').addClass('percentage-correct-question-' + question.id)
 
 			$('.quizzy-quiz').append(
 				questionDiv 
@@ -39,7 +50,10 @@
 				'<br>',
 				answer2,
 				question.answer2,
-				'<br><br>'
+				'<br>',
+				'<br>',
+				percentageCorrectSpan,
+				'<br>'
 			)
 		})
 		var name = $('<input type = "text">')
@@ -49,8 +63,7 @@
 
 		var submit = $('<input type = "submit">')
 
-		$('.quizzy-quiz').append(name)
-		$('.quizzy-quiz').append(submit)
+		$('.quizzy-quiz').append('<br>', name, submit)
 	}
 
 	topScores()
@@ -58,7 +71,16 @@
 	$(document).on('top-scores', topScores)
 
 	function topScores () {
-		$('.top-scores-table').html('<thead class="top-scores"><tr><td>Username</td><td>Score</td></tr></thead>')
+		$('.top-scores-table').empty()
+
+		var thead = $('<thead>').addClass('top-scores')
+		var tr = $('<tr>')
+		var username = $('<td>').text('Username')
+		var score = $('<td>').text('Score')
+		$('.top-scores-table').append(thead)
+		$(thead).append(tr)
+		$(tr).append(username)
+		$(tr).append(score)
 
 		if (sessionStorage.getItem('topScores')) {
 			var topScores = sessionStorage.getItem('topScores').split('|')
@@ -70,6 +92,22 @@
 				.html('<td>' + quizScore[0] + '</td><td>' + quizScore[1] + '</td>')
 
 				$('.top-scores').after(entry)
+			})
+
+			Quizzy.forEach(function(question){
+				var answersToQuestion = 0
+				var correctAnswersToQuestion = 0
+
+				topScores.forEach(function(entry){
+					// console.log('logged answer ', entry.split(',')[question.id + 1])
+					// console.log('correct answer ', question.correctAnswer)
+					answersToQuestion++
+					if (entry.split(',')[question.id + 1] === question.correctAnswer) correctAnswersToQuestion++
+				})
+
+				var percentageCorrect = Math.round((correctAnswersToQuestion / (answersToQuestion)) * 100)
+
+				$('.percentage-correct-question-' + question.id).text('Users got this question right ' + percentageCorrect + '% of the time.')
 			})
 		}
 	}

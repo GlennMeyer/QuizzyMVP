@@ -23,17 +23,23 @@
 		$(document).ready(function(){
 			$('form.quizzy-quiz').submit(function(e){
 				e.preventDefault()
+
 				var correctAnswers = 0
+				var answers = []
 				var counter = 1
 
 				Quizzy.forEach(function(question){
 					if ($('input[name=question-' + counter + ']:checked').val() === question.correctAnswer) correctAnswers++
+					answers.push($('input[name=question-' + counter + ']:checked').val())
 					counter++
 				})
+
 				var score = Math.round((correctAnswers / (counter - 1)) * 100)
 				var loadSave = sessionStorage.getItem('topScores')
-				var currentSave = $('.name-field').val()+ ',' + score + '|'
+				var currentSave = $('.name-field').val()+ ',' +	score + ',' + answers.join(',') + '|'
+
 				sessionStorage.getItem('topScores') ? sessionStorage.setItem('topScores', loadSave + currentSave) : sessionStorage.setItem('topScores', currentSave)
+
 				$(document).trigger('top-scores')
 			})
 		})

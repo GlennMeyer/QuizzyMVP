@@ -1,0 +1,43 @@
+<html>
+<title>Quizzy MVP</title>
+<body>
+	<!-- View -->
+	<table class = 'top-scores-table'>
+	</table>
+	<form class='quizzy-quiz'></div>
+
+	<!-- 3rd Party Libraries -->
+	<script src="https://code.jquery.com/jquery-2.1.1.js" type="text/javascript"></script>
+
+	<!-- Language Extensions -->
+	<script src="globals.js" type="text/javascript"></script>
+
+	<!-- Models -->
+	<script src="model.js" type="text/javascript"></script>
+
+	<!-- Presenter -->
+	<script src="presenter.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+	(function(){
+		$(document).ready(function(){
+			$('form.quizzy-quiz').submit(function(e){
+				e.preventDefault()
+				var correctAnswers = 0
+				var counter = 1
+
+				Quizzy.forEach(function(question){
+					if ($('input[name=question-' + counter + ']:checked').val() === question.correctAnswer) correctAnswers++
+					counter++
+				})
+				var score = Math.round((correctAnswers / (counter - 1)) * 100)
+				var loadSave = sessionStorage.getItem('topScores')
+				var currentSave = $('.name-field').val()+ ',' + score + '|'
+				sessionStorage.getItem('topScores') ? sessionStorage.setItem('topScores', loadSave + currentSave) : sessionStorage.setItem('topScores', currentSave)
+				$(document).trigger('top-scores')
+			})
+		})
+	})()
+	</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <title>Quizzy MVP</title>
 <body>
 	<!-- View -->
-	<table class = 'top-scores-table'>
+	<table class= 'top-scores-table' style='float:right;'>
 	</table>
 	<form class='quizzy-quiz'></div>
 
@@ -39,6 +39,9 @@
 				var currentSave = $('.name-field').val()+ ',' +	score + ',' + answers.join(',') + '|'
 
 				sessionStorage.getItem('topScores') ? sessionStorage.setItem('topScores', loadSave + currentSave) : sessionStorage.setItem('topScores', currentSave)
+
+				$('input:text').val('')
+				$('input[type="radio"]').attr('checked', false)
 
 				$(document).trigger('top-scores')
 			})
